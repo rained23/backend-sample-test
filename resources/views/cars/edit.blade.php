@@ -1,0 +1,237 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header">{{ __('Edit Car') }}</div>
+
+                <div class="card-body">
+                        @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                        @endif
+                    <form method="POST" action="{{ route('cars.update',$car->id) }}">
+                        @csrf
+                        @method('put')
+                        <div class="form-group row">
+                            <label for="user" class="col-md-4 col-form-label text-md-right">{{ __('Owner') }}</label>
+                                
+                            <div class="col-md-6">                            
+                                <select id="user" name="user_id" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : ''}}" required>
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}" 
+                                        @if($car->user_id == $user->id)
+                                            selected="selected"
+                                        @endif    
+                                        >{{$user->name}}</option>
+                                    @endforeach                                                               
+                                </select>
+
+                                @if ($errors->has('user_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('user_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>                                
+                        </div> 
+
+                        <div class="form-group row">
+                            <label for="registrationNo" class="col-md-4 col-form-label text-md-right">{{ __('Registration No.') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="registrationNo" type="text" class="form-control{{ $errors->has('registration_no') ? ' is-invalid' : '' }}" name="registration_no" value="{{ $car->registration_no}}" required autofocus>
+
+                                @if ($errors->has('registration_no'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('registration_no') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="build" class="col-md-4 col-form-label text-md-right">{{ __('Build') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="build" type="text" class="form-control{{ $errors->has('build') ? ' is-invalid' : '' }}" name="build" value="{{ $car->build }}" required autofocus>
+
+                                @if ($errors->has('build'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('build') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="model" class="col-md-4 col-form-label text-md-right">{{ __('Model') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="model" type="text" class="form-control{{ $errors->has('model') ? ' is-invalid' : '' }}" name="model" value="{{ $car->model }}" required autofocus>
+
+                                @if ($errors->has('model'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('model') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="year" class="col-md-4 col-form-label text-md-right">{{ __('Year') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="year" type="text" class="form-control{{ $errors->has('year') ? ' is-invalid' : '' }}" name="year" value="{{ $car->year }}" required autofocus>
+
+                                @if ($errors->has('year'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('year') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label for="location" class="col-md-4 col-form-label text-md-right">{{ __('Location') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="location" type="text" placeholder="{ 'lat': 3.123123, 'lng': 32.123213}" class="form-control{{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" value="{{ $car->location }}" autofocus>
+    
+                                    @if ($errors->has('location'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('location') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="is_featured" class="col-md-4 col-form-label text-md-right">{{ __('Featured ?') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="is_featured" type="checkbox" class="form-check-input{{ $errors->has('is_featured') ? ' is-invalid' : '' }}" name="is_featured" value="1"
+                                    @if($car->is_featured)
+                                        checked="checked"
+                                    @endif
+                                    >
+    
+                                    @if ($errors->has('is_featured'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('is_featured') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                                            
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Save') }}
+                                </button>
+                                <a href="{{route('cars.index')}}" class="btn btn-secondary">
+                                        {{ __('Back') }}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">Car Schedule</div>
+                            <div class="card-body">
+                                
+                                @foreach($car->schedules as $schedule)
+                                <div class="form-group row">
+                                    
+                                    <label for="user" class="col-md-3 col-form-label text-md-right">{{ __('Start Date') }} :</label>
+                                        
+                                    <label class="col-md-6 mt-2">  
+                                                                    
+                                            {{$schedule->start}}
+                                        
+                                    </label>       
+                                    
+                                    <label class="col-md-1"> 
+                                        <form method="post" action="{{ route('schedules.destroy',$schedule->id) }}">
+                                            @csrf
+                                            @method('delete')
+                                        <button type="submit" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>
+                                        </form>
+                                    </label>                         
+                                </div> 
+                                <div class="form-group row">
+                                        <label for="user" class="col-md-3 col-form-label text-md-right">{{ __('End Date') }} :</label>
+                                            
+                                        <label class="col-md-6 mt-2">  
+                                                                        
+                                                {{$schedule->end}}
+                                            
+                                        </label>                                
+                                        <label class="col-md-1"> </label>   
+                                    </div> 
+                                <hr />
+                                @endforeach
+                                
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">Add Schedule</div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{route('schedules.store')}}">
+                                    @csrf
+                                    <input type="hidden" name="car_id" value="{{$car->id}}" />
+                                    <div class="form-group row">                                        
+                                        <label for="user" class="col-md-4 col-form-label text-md-right">{{ __('Start Date') }} :</label>
+                                            
+                                        <div class="col-md-8">                                                                                                                          
+                                            <input  type="datetime-local" class="form-control{{ $errors->has('start') ? ' is-invalid' : '' }}" name="start" value="{{ old('start') }}" required autofocus>
+                                            @if ($errors->has('start'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('start') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>                                
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label for="end" class="col-md-4 col-form-label text-md-right">{{ __('End Date') }} :</label>
+                                            
+                                        <div class="col-md-8">                                                                                                                          
+                                            <input  type="datetime-local" class="form-control{{ $errors->has('end') ? ' is-invalid' : '' }}" name="end" value="{{ old('end') }}" required autofocus>
+                                            @if ($errors->has('end'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('end') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>                                
+                                    </div>
+
+                                    <div class="form-group row mb-0">
+                                            <div class="col-md-6 offset-md-5">
+                                                <button type="submit" class="btn btn-primary">
+                                                    {{ __('Add') }}
+                                                </button>                                                
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+@endsection
