@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    {{ env('app.name', 'SocarTest')}}
+                    {{ config('app.name', 'SocarTest')}}
                 </div>
 
                
