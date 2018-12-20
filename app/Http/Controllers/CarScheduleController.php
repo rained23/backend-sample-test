@@ -33,9 +33,9 @@ class CarScheduleController extends Controller
             
             if(strpos($search,'date'))
             {                         
-                $date = trim(str_replace_array($date,['date:','date :']));                
-                $query->orWhereBetween('start',[Carbon::parse($search)->startOfDay(),Carbon::parse($search)->endOfDay()]);
-                $query->orWhereBetween('end',[Carbon::parse($search)->startOfDay(),Carbon::parse($search)->endOfDay()]);
+                $date = trim(str_replace_array($search,['date:','date :']));                
+                $query->orWhereBetween('start',[Carbon::parse($date)->startOfDay(),Carbon::parse($date)->endOfDay()]);
+                $query->orWhereBetween('end',[Carbon::parse($date)->startOfDay(),Carbon::parse($date)->endOfDay()]);
 
             }
 
