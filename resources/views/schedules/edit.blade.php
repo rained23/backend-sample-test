@@ -43,7 +43,7 @@
                             <label for="user" class="col-md-4 col-form-label text-md-right">{{ __('Start Date') }} :</label>
                                 
                             <div class="col-md-8">                                                                                                                          
-                                <input  type="datetime-local" class="form-control{{ $errors->has('start') ? ' is-invalid' : '' }}" name="start" value="{{ $schedule->start->format('Y-m-d\Th:m:s') }}" required autofocus>
+                                <input  type="datetime-local" class="form-control{{ $errors->has('start') ? ' is-invalid' : '' }}" name="start" value="{{ $schedule->start->format('Y-m-d\TH:i') }}" required autofocus>
                                 @if ($errors->has('start'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('start') }}</strong>
@@ -56,7 +56,7 @@
                             <label for="end" class="col-md-4 col-form-label text-md-right">{{ __('End Date') }} :</label>
                                 
                             <div class="col-md-8">                                                                                                                          
-                                <input  type="datetime-local" class="form-control{{ $errors->has('end') ? ' is-invalid' : '' }}" name="end" value="{{ $schedule->end->format('Y-m-d\Th:m:s') }}" required autofocus>
+                                <input  type="datetime-local" class="form-control{{ $errors->has('end') ? ' is-invalid' : '' }}" name="end" value="{{ $schedule->end->format('Y-m-d\TH:i') }}" required autofocus>
                                 @if ($errors->has('end'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('end') }}</strong>
