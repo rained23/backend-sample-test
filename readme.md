@@ -27,6 +27,10 @@ Run seeder
 ```
 php artisan db:seed
 ```
+Compile the assets
+```
+yarn run dev
+```
 
 #### Additional Notes
 To login into the backend system :
