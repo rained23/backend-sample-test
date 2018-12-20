@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Role;
 use App\Tag;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
 
 class UserController extends Controller
 {
@@ -58,8 +59,7 @@ class UserController extends Controller
                         $query->where('name','LIKE','%'.$value.'%');
                     });                
             }
-        }
-        
+        }        
         
         //can refactor
         if($request->has('type') || $request->has('roles') || $request->has('tags')) {
@@ -116,7 +116,8 @@ class UserController extends Controller
             'phone' => ['required', 'string','min:7', 'max:255', 'unique:Users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'type' => ['required', 'in:Business,Product'],
-            'roles.*' => ['distinct','exists:Roles,id']
+            'roles.*' => ['distinct','exists:Roles,id'],
+            'tags.*' => ['distinct', 'exists:Tags,id']
         ]);
 
         $user = User::create([
@@ -127,11 +128,17 @@ class UserController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         
-        $roles= [];
+        $roles = $tags = [];
         if(request()->has('roles')){
             $roles= $data['roles'];
         }
+
+        if(request()->has('tags')) {
+            $tags = $data['tags'];
+        }
+
         $user->roles()->sync($roles);
+        $user->tags()->sync($tags);
 
         return redirect()->route('users.edit',$user->id)->with('status','Resource has been created.');
     }
@@ -158,7 +165,8 @@ class UserController extends Controller
         $tags = Tag::all();
         $roles = Role::all();
         $userRoles = $user->roles()->allRelatedIds()->toArray();
-        return view('users.edit',['user'=>$user,'roles'=>$roles,'tags'=>$tags,'userRoles'=>$userRoles]);
+        $userTags = $user->tags()->allRelatedIds()->toArray();
+        return view('users.edit',['user'=>$user,'roles'=>$roles,'tags'=>$tags,'userRoles'=>$userRoles,'userTags'=>$userTags]);
     }
 
     /**
@@ -176,7 +184,8 @@ class UserController extends Controller
             'phone' => ['required','string','min:7','max:255', Rule::unique('Users')->ignore($user->id)],
             'password' => ['nullable','string', 'min:6'],
             'type' => ['required', 'in:Business,Product'],
-            'roles.*' => ['distinct','exists:Roles,id']
+            'roles.*' => ['distinct','exists:Roles,id'],
+            'tags.*' => ['distinct', 'exists:Tags,id']
         ]);
 
         if($data['password']) {
@@ -184,11 +193,16 @@ class UserController extends Controller
         }
 
         $user->update(array_filter($data));        
-        $roles= [];
+        $roles= $tags = [];
         if(request()->has('roles')){
             $roles= $data['roles'];
         }
+        if(request()->has('tags')){
+            $tags= $data['tags'];
+        }
+
         $user->roles()->sync($roles);
+        $user->tags()->sync($tags);
 
         return redirect()->route('users.edit',$user->id)->with('status','Resource has been updated.');
     }
@@ -203,7 +217,23 @@ class UserController extends Controller
     {        
         $user->delete();
 
-        return redirect()->route('users.index')->with('status','Resource has been deleted.');
+        return response()->json(['status'=>'Resource has been deleted.']);
     }    
+
+    public function tag()
+    {
+        $data = request()->validate([
+            'ids' => ['required'],
+            'ids.*'=> ['distinct', 'exists:Users,id'],
+            'tag_name' => ['required']
+        ]);
+                    
+        $status = Artisan::call('user:tags', [
+            'users'=> $data['ids'],
+            '-T'=> $data['tag_name']
+            ]);
+
+        return response()->json(['status'=>!$status]);
+    }
     
 }

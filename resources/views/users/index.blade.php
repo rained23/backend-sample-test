@@ -18,44 +18,7 @@
                         </div>
                     @endif
                                         
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Kind</th>
-                                <th scope="col">E-mail</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Phone</th>                                
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                     
-                        @foreach($users as $user)
-                            <tr>                                
-                                <td>{{ $user->type }}</td>
-                                <td>{{$user->email}}</td>
-                                <td>{{$user->name}}</td>
-                                <td>{{ $user->phone }}</td>
-                                
-                                <td> 
-                                    
-                                    <form method="POST" action="{{route('users.destroy',$user->id)}}">
-                                        @csrf 
-                                        @method('delete')
-                                            <a class="btn btn-outline-primary" href="{{ route('users.show',$user->id) }}">
-                                                <span class="oi oi-eye"></span>
-                                            </a>
-                                            <a class="btn btn-outline-primary" href="{{ route('users.edit',$user->id) }}">
-                                                <span class="oi oi-pencil"></span>
-                                            </a>
-                                        <button type="submit" class="btn btn-outline-danger"><span class="oi oi-trash"></span></button>
-                                    </form>
-                                </td>
-                            </tr>                                                              
-                        @endforeach
-                        </tbody>
-                    </table>
+                    <user-table :user-ds="{{$users}}" :tags="{{$tags}}"></user-table>
                 </div>
             </div>
         </div>

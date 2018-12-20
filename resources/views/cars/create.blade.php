@@ -22,7 +22,11 @@
                             <div class="col-md-6">                            
                                 <select id="user" name="user_id" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : ''}}" required>
                                     @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                        <option value="{{$user->id}}"
+                                            @if(old('user_id') == $user->id)
+                                                selected="selected"
+                                            @endif
+                                            >{{$user->name}}</option>
                                     @endforeach                                                               
                                 </select>
 
@@ -108,7 +112,11 @@
                                 <label for="is_featured" class="col-md-4 col-form-label text-md-right">{{ __('Featured ?') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="is_featured" type="checkbox" class="form-check-input{{ $errors->has('is_featured') ? ' is-invalid' : '' }}" name="is_featured" value="{{ old('is_featured') }}">
+                                    <input id="is_featured" type="checkbox" class="form-check-input{{ $errors->has('is_featured') ? ' is-invalid' : '' }}" name="is_featured" value="1"
+                                    @if(old('is_featured'))
+                                        checked="checked"
+                                    @endif
+                                    >
     
                                     @if ($errors->has('is_featured'))
                                         <span class="invalid-feedback" role="alert">

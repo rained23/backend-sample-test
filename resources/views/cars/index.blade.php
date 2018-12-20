@@ -20,7 +20,8 @@
 
                     <table class="table">
                         <thead>
-                            <tr>                                
+                            <tr>                   
+                                <th scope="col">Owner</th>             
                                 <th scope="col">Registration No.</th>
                                 <th scope="col">Build</th>
                                 <th scope="col">Model</th>
@@ -33,7 +34,12 @@
                         <tbody>
                      
                         @foreach($cars as $car)
-                            <tr>                                                               
+                            <tr>                          
+                                <td>
+                                    
+                                    {{$car->user->name}}
+                                    
+                                </td>                                     
                                 <td>{{$car->registration_no}}</td>
                                 <td>{{$car->build}}</td>
                                 <td>{{ $car->model }}</td>

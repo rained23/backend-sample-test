@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use Illuminate\Validation\Rule;
 
 class CarController extends Controller
 {
@@ -29,6 +30,7 @@ class CarController extends Controller
     public function index(Request $request)
     {
         $filters = ['is_featured'];
+        $filterRelations = ['user'];
         //searchable and filterable        
         $query = Car::query();
         
@@ -40,6 +42,16 @@ class CarController extends Controller
             
             foreach($columns as $column){
                 $query->orWhere($column, 'LIKE', '%' . $search . '%');
+            }
+
+            foreach($filterRelations as $filter)
+            {
+                
+                    $value = $request->input('search');
+                    $foreignKey = str_singular($filter).'_id';
+                    $query->orWhereHas($filter, function($query) use ($foreignKey,$value){
+                        $query->where('name','LIKE','%'.$value.'%');
+                    });                
             }
 
         }
@@ -86,22 +98,23 @@ class CarController extends Controller
             'build' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'year' => ['required', 'string', 'max:255'],
-            'registration_no' => ['required', 'string', 'max:255'],
+            'registration_no' => ['required', 'alpha_num', 'max:255','unique:Cars'],
             'location' => ['string','nullable','json']            
         ]);
 
         $car = new Car;
-        $car->user_id = $data['user_id'];
+        $user = User::find($data['user_id']);       
+
+        if($request->has('is_featured') && $user->hasTag(env('BETA_TAG','beta-tester'))) {                     
+            $car->is_featured = true;
+        }
         $car->build = $data['build'];
         $car->model = $data['model'];
         $car->year = $data['year'];
         $car->registration_no = $data['registration_no'];
         $car->location = $data['location'];
-        if($request->has('is_featured')) {
-            $car->is_featured = true;
-        }
-
-        $car->save();
+        
+        $user->cars()->save($car);
         
 
 
@@ -146,11 +159,11 @@ class CarController extends Controller
     public function update(Request $request, Car $car)
     {
         $data = request()->validate([
-            'user_id' => ['required','exists:Users,id'],
+            'user_id' => ['nullable','exists:Users,id'],
             'build' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'year' => ['required', 'string', 'max:255'],
-            'registration_no' => ['required', 'string', 'max:255'],
+            'registration_no' => ['required', 'string', 'max:255',Rule::unique('Cars')->ignore($car->id)],
             'location' => ['string','nullable','json']            
         ]);
         
@@ -160,7 +173,9 @@ class CarController extends Controller
         $car->year = $data['year'];
         $car->registration_no = $data['registration_no'];
         $car->location = $data['location'];
-        if($request->has('is_featured')) {
+        $car->is_featured = false;
+
+        if($request->has('is_featured') && $car->user->hasTag(env('BETA_TAG','beta-tester'))) {                     
             $car->is_featured = true;
         }
 

@@ -32,6 +32,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
+    }
+    
     public function roles()
     {
         return $this->belongsToMany(Role::class);
@@ -61,6 +66,11 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return null !== $this->roles()->where('name', $role)->first();
+    }
+
+    public function hasTag($tag)
+    {
+        return null !== $this->tags()->where('name',$tag)->first();
     }
 
 }

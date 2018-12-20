@@ -78,6 +78,7 @@ class ManageTag extends Command
         if($this->option('delete'))
         {
             $this->delete($tags);
+            $this->info('Tags has been deleted.');
 
         }
         

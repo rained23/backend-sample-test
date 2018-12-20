@@ -8,7 +8,16 @@ class CarSchedule extends Model
 {
     protected $table = "CarSchedules";
 
-    protected $fillable = ['start', 'end'];
+    protected $fillable = ['car_id','start', 'end'];
+
+    protected $dates = [
+        'start','end'
+    ];
+
+    protected $cast = [
+        'start'=>'datetime',
+        'end'=>'datetime'
+    ];
 
     public function car()
     {

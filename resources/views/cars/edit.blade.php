@@ -21,7 +21,8 @@
                             <label for="user" class="col-md-4 col-form-label text-md-right">{{ __('Owner') }}</label>
                                 
                             <div class="col-md-6">                            
-                                <select id="user" name="user_id" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : ''}}" required>
+                                <select id="user" name="user_id" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : ''}}">
+                                    <option value="">-----</option>
                                     @foreach($users as $user)
                                         <option value="{{$user->id}}" 
                                         @if($car->user_id == $user->id)

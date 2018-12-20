@@ -113,6 +113,21 @@
                                 
                         </div> 
 
+                        <div class="form-group row">
+                            <label for="tags" class="col-md-4 col-form-label text-md-right">{{ __('Tags') }}</label>
+                                
+                               @foreach($tags as $tag)
+                                <div class="col-md-2">
+                                    <input  type="checkbox" name="tags[]" value="{{$tag->id}}"
+                                    @if(in_array($tag->id,$userTags))
+                                     checked="checked"
+                                    @endif
+                                    > {{ title_case($tag->name) }}
+                                </div>
+                               @endforeach
+                            
+                    </div> 
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

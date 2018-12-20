@@ -22,6 +22,9 @@
                         <li>
                             <a href="{{route('cars.index')}}"> Cars</a>
                         </li>
+                        <li>
+                                <a href="{{route('schedules.index')}}"> Schedules</a>
+                            </li>
                     </ul>
                     
                 </div>

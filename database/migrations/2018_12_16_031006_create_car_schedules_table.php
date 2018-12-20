@@ -19,6 +19,8 @@ class CreateCarSchedulesTable extends Migration
             $table->dateTime('start');
             $table->dateTime('end');
             $table->timestamps();
+
+            $table->foreign('car_id')->references('id')->on('Cars')->onDelete('cascade');
         });
     }
 
@@ -29,6 +31,11 @@ class CreateCarSchedulesTable extends Migration
      */
     public function down()
     {
+        
+        Schema::table('CarSchedules', function($table) {
+            $table->dropForeign(['car_id']);
+        });
+        
         Schema::dropIfExists('CarSchedules');
     }
 }

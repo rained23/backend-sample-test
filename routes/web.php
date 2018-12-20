@@ -21,9 +21,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::resource('users', 'UserController');
+Route::post('/users/tag', 'UserController@tag');
+
 
 Route::resource('cars', 'CarController');
 
-Route::resource('schedules', 'CarScheduleController')->except(['index','create','edit']);
+Route::resource('schedules', 'CarScheduleController');
 
 
